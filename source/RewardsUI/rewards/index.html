@@ -22,17 +22,23 @@
         <hr>
     </div>
     <div>
-        <h2>Add orders</h2>
-        <form>
-            <label>Enter email address: </label><input type="text"/><br>
-            <label>Enter order total: </label><input type="text"/><input type="button" value="Submit Order"/>
+        <h2>Add Order</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <label>Enter email address: </label><br>
+            {{ order_form.email }}
+            <br>
+            <label>Enter order total: </label><br>
+            {{ order_form.total }}
+            <button type="submit" class="submit btn btn-default">Submit</button>
         </form>
         <hr>
     </div>
     <div>
         <h2>User Rewards</h2>
-        <form>
-            <label>Email address: </label><input type="text"/><input type="button" value="Search"/>
+        <form action="" method="GET">
+            {{ filter_form.email_filter }}
+            <input type="submit" value="Search"/>
         </form>
         <table border="1">
             <thead>
@@ -47,15 +53,23 @@
             </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>customer01@gmail.com</td>
-                    <td>100</td>
-                    <td>A</td>
-                    <td>5% off purchase</td>
-                    <td>B</td>
-                    <td>10% off purchase</td>
-                    <td>50%</td>
-                </tr>
+                {% for customer in customers_data %}
+                    {% if customer.email == "none" %}
+                        <tr>
+                            <td>Sorry, that email was not recognized</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td>{{ customer.email }}</td>
+                            <td>{{ customer.points }}</td>
+                            <td>{{ customer.tier }}</td>
+                            <td>{{ customer.rewardTierName }}</td>
+                            <td>{{ customer.nextTier }}</td>
+                            <td>{{ customer.nextTierName }}</td>
+                            <td>{{ customer.nextTierProgress }}</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
             </tbody>
         </table>
     </div>
